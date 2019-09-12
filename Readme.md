@@ -3,6 +3,8 @@
 * Студент: [Артём Сухарков](https://up.htmlacademy.ru/javascript/18/user/926009).
 * Наставник: [Danil Shcherbakov](https://up.htmlacademy.ru/javascript/18/user/1174181).
 
+
+
 ---
 
 _Не удаляйте и не обращайте внимание на файлы:_<br>
