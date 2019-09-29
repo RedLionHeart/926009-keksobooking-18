@@ -36,27 +36,36 @@ var mapPinTemplate = document
   .querySelector('#pin')
   .content.querySelector('.map__pin');
 
+// Находим случайное целое число из заданного промежутка.
 var getRandomIntegerNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+// Создаем адрес изображения аватара автора объявления.
 var generateAuthorAvatar = function (i) {
   return PATTERN_USER_LINK + USER_NUMBERS[i] + IMAGE_FORMAT;
 };
 
+// Получаем массив случайной длины.
 var getRandomSubarray = function (array) {
   var startIndex = 0;
   var endIndex = getRandomIntegerNumber(startIndex, array.length);
   return array.slice(startIndex, endIndex);
 };
 
+// Получаем одно случайное значение из массива.
 var getRandomValueFromArray = function (array) {
   return array[getRandomIntegerNumber(0, array.length - 1)];
 };
 
+// Получаем случайное время в заданном промежутке.
+var getRandomTimeString = function () {
+  return getRandomIntegerNumber(TIME_MIN, TIME_MAX) + ':00';
+};
+
+// Генерация данных объявления.
 var makeArrayOfAdvertisments = function () {
   var advertismentsList = [];
-  var valueCheck = getRandomIntegerNumber(TIME_MIN, TIME_MAX) + ':00';
   for (var i = 0; i < NUMBER_OF_OBJECTS; i++) {
     var locationX = getRandomIntegerNumber(0, elementMap.offsetWidth);
     var locationY = getRandomIntegerNumber(LOCATION_START_Y, LOCATION_END_Y);
@@ -75,8 +84,8 @@ var makeArrayOfAdvertisments = function () {
             NUMBER_OF_GUESTS_MIN,
             NUMBER_OF_GUESTS_MAX
         ),
-        checkin: valueCheck,
-        checkout: valueCheck,
+        checkin: getRandomTimeString(),
+        checkout: getRandomTimeString(),
         features: getRandomSubarray(FEATURES),
         description: 'Описание ' + i,
         photos: getRandomSubarray(PHOTOS)
@@ -92,10 +101,12 @@ var makeArrayOfAdvertisments = function () {
   return advertismentsList;
 };
 
+// Показываем карту
 var activeMap = function () {
   elementMap.classList.remove('map--faded');
 };
 
+// Генерируем метку объявления.
 var generatePinBlock = function (pinData) {
   var templatePin = mapPinTemplate.cloneNode(true);
   var templatePinImage = templatePin.querySelector('img');
@@ -107,6 +118,7 @@ var generatePinBlock = function (pinData) {
   return templatePin;
 };
 
+// Добавляем метки в разметку.
 var drawPins = function (data) {
   var pinsBlock = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -116,6 +128,7 @@ var drawPins = function (data) {
   pinsBlock.appendChild(fragment);
 };
 
+// Запускаем функции.
 var init = function () {
   activeMap();
   drawPins(makeArrayOfAdvertisments());

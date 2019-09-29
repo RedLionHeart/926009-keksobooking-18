@@ -1,4 +1,4 @@
-/*! normalize.scss v0.1.0 | MIT License | based on git.io/normalize */
+f/*! normalize.scss v0.1.0 | MIT License | based on git.io/normalize */
 
 /**
  * 1. Set default font family to sans-serif.
@@ -282,7 +282,7 @@ select {
 /**
  * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
  *    and `video` controls.
- * 2. Correct inability to style clickable `input` TYPES in iOS.
+ * 2. Correct inability to style clickable `input` types in iOS.
  * 3. Improve usability and consistency of cursor style between image-type
  *    `input` and others.
  */
