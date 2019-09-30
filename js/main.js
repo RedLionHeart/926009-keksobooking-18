@@ -30,11 +30,43 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
+var TYPES_CORRELATION_MAP = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец'
+};
+var TRANSCRIPT_ROOMS = {
+  one: ' комната для ',
+  few: ' комнаты для ',
+  other: ' комнат для '
+};
+var TRANSCRIPT_GUESTS = {
+  one: ' гостя',
+  few: ' гостей',
+  other: ' гостей'
+};
 
 var elementMap = document.querySelector('.map');
 var mapPinTemplate = document
   .querySelector('#pin')
   .content.querySelector('.map__pin');
+var mapCardTemplate = document
+  .querySelector('#card')
+  .content.querySelector('.map__card');
+var mapFilters = elementMap.querySelector('.map__filters-container');
+var cardTemplate = mapCardTemplate.cloneNode(true);
+var cardFeatures = cardTemplate.querySelector('.popup__features');
+var cardPhotos = cardTemplate.querySelector('.popup__photos');
+var cardPhotoElement = cardPhotos.querySelector('.popup__photo');
+var cardTitle = cardTemplate.querySelector('.popup__title');
+var cardAdress = cardTemplate.querySelector('.popup__text--address');
+var cardPrice = cardTemplate.querySelector('.popup__text--price');
+var cardType = cardTemplate.querySelector('.popup__type');
+var cardCapacity = cardTemplate.querySelector('.popup__text--capacity');
+var cardTime = cardTemplate.querySelector('.popup__text--time');
+var cardDescription = cardTemplate.querySelector('.popup__description');
+var cardAvatar = cardTemplate.querySelector('.popup__avatar');
 
 // Находим случайное целое число из заданного промежутка.
 var getRandomIntegerNumber = function (min, max) {
@@ -128,10 +160,74 @@ var drawPins = function (data) {
   pinsBlock.appendChild(fragment);
 };
 
+// Делаем соответствие чисел со словами.
+var uniteNumberWithWords = function (number, schedule) {
+  var tens = number % 100;
+  var units = number % 10;
+  if (tens > 10 && tens < 20) {
+    return schedule.other;
+  }
+  if (units > 1 && units < 5) {
+    return schedule.few;
+  }
+  if (units === 1) {
+    return schedule.one;
+  }
+  return schedule.other;
+};
+
+// Добавляем доступные удобства в объявление.
+var renderFeaturesInAd = function (dataItem) {
+  cardFeatures.innerHTML = '';
+  for (var i = 0; i < dataItem.offer.features.length; i++) {
+    var elementInCardFeatures = document.createElement('li');
+    elementInCardFeatures.classList.add('popup__feature');
+    elementInCardFeatures.classList.add('popup__feature--' + dataItem.offer.features[i]);
+    cardFeatures.appendChild(elementInCardFeatures);
+  }
+};
+
+// Добавляем фотографии в объявление.
+var renderPhotosInAd = function (dataItem) {
+  if (dataItem.offer.photos.length === 0) {
+    cardPhotos.innerHTML = '';
+  } else {
+    for (var i = 0; i < dataItem.offer.photos.length; i++) {
+      if (i === 0) {
+        cardPhotoElement.src = dataItem.offer.photos[i];
+      } else {
+        var clonePhotoElement = cardPhotoElement.cloneNode(true);
+        clonePhotoElement.src = dataItem.offer.photos[i];
+        cardPhotos.appendChild(clonePhotoElement);
+      }
+    }
+  }
+};
+
+// Создаем объявление на основе данных первого объекта.
+var generateCardBlock = function (dataCard) {
+  cardTitle.textContent = dataCard.offer.title;
+  cardAdress.textContent = dataCard.offer.address;
+  cardPrice.textContent = dataCard.offer.price + '₽/ночь';
+  cardType.textContent = TYPES_CORRELATION_MAP[dataCard.offer.type];
+  cardCapacity.textContent =
+    dataCard.offer.rooms +
+    uniteNumberWithWords(dataCard.offer.rooms, TRANSCRIPT_ROOMS) +
+    dataCard.offer.guests +
+    uniteNumberWithWords(dataCard.offer.guests, TRANSCRIPT_GUESTS);
+  cardTime.textContent = 'Заезд после ' + dataCard.offer.checkin + ', выезд до ' + dataCard.offer.checkout;
+  cardDescription.textContent = dataCard.offer.description;
+  renderFeaturesInAd(dataCard);
+  renderPhotosInAd(dataCard);
+  cardAvatar.src = dataCard.author.avatar;
+  elementMap.insertBefore(cardTemplate, mapFilters);
+};
+
 // Запускаем функции.
 var init = function () {
   activeMap();
   drawPins(makeArrayOfAdvertisments());
+  generateCardBlock(makeArrayOfAdvertisments()[0]);
 };
 
 init();
