@@ -55,18 +55,6 @@ var mapCardTemplate = document
   .querySelector('#card')
   .content.querySelector('.map__card');
 var mapFilters = elementMap.querySelector('.map__filters-container');
-var cardTemplate = mapCardTemplate.cloneNode(true);
-var cardFeatures = cardTemplate.querySelector('.popup__features');
-var cardPhotos = cardTemplate.querySelector('.popup__photos');
-var cardPhotoElement = cardPhotos.querySelector('.popup__photo');
-var cardTitle = cardTemplate.querySelector('.popup__title');
-var cardAdress = cardTemplate.querySelector('.popup__text--address');
-var cardPrice = cardTemplate.querySelector('.popup__text--price');
-var cardType = cardTemplate.querySelector('.popup__type');
-var cardCapacity = cardTemplate.querySelector('.popup__text--capacity');
-var cardTime = cardTemplate.querySelector('.popup__text--time');
-var cardDescription = cardTemplate.querySelector('.popup__description');
-var cardAvatar = cardTemplate.querySelector('.popup__avatar');
 
 // Находим случайное целое число из заданного промежутка.
 var getRandomIntegerNumber = function (min, max) {
@@ -177,7 +165,7 @@ var uniteNumberWithWords = function (number, schedule) {
 };
 
 // Добавляем доступные удобства в объявление.
-var renderFeaturesInAd = function (dataItem) {
+var renderFeaturesInAd = function (dataItem, cardFeatures) {
   cardFeatures.innerHTML = '';
   for (var i = 0; i < dataItem.offer.features.length; i++) {
     var elementInCardFeatures = document.createElement('li');
@@ -188,7 +176,8 @@ var renderFeaturesInAd = function (dataItem) {
 };
 
 // Добавляем фотографии в объявление.
-var renderPhotosInAd = function (dataItem) {
+var renderPhotosInAd = function (dataItem, cardPhotos) {
+  var cardPhotoElement = cardPhotos.querySelector('.popup__photo');
   if (dataItem.offer.photos.length === 0) {
     cardPhotos.innerHTML = '';
   } else {
@@ -206,8 +195,20 @@ var renderPhotosInAd = function (dataItem) {
 
 // Создаем объявление на основе данных.
 var generateCardBlock = function (dataCard) {
+  var cardTemplate = mapCardTemplate.cloneNode(true);
+  var cardFeatures = cardTemplate.querySelector('.popup__features');
+  var cardPhotos = cardTemplate.querySelector('.popup__photos');
+  var cardTitle = cardTemplate.querySelector('.popup__title');
+  var cardAddress = cardTemplate.querySelector('.popup__text--address');
+  var cardPrice = cardTemplate.querySelector('.popup__text--price');
+  var cardType = cardTemplate.querySelector('.popup__type');
+  var cardCapacity = cardTemplate.querySelector('.popup__text--capacity');
+  var cardTime = cardTemplate.querySelector('.popup__text--time');
+  var cardDescription = cardTemplate.querySelector('.popup__description');
+  var cardAvatar = cardTemplate.querySelector('.popup__avatar');
+
   cardTitle.textContent = dataCard.offer.title;
-  cardAdress.textContent = dataCard.offer.address;
+  cardAddress.textContent = dataCard.offer.address;
   cardPrice.textContent = dataCard.offer.price + '₽/ночь';
   cardType.textContent = TYPES_CORRELATION_MAP[dataCard.offer.type];
   cardCapacity.textContent =
@@ -217,8 +218,8 @@ var generateCardBlock = function (dataCard) {
     uniteNumberWithWords(dataCard.offer.guests, TRANSCRIPT_GUESTS);
   cardTime.textContent = 'Заезд после ' + dataCard.offer.checkin + ', выезд до ' + dataCard.offer.checkout;
   cardDescription.textContent = dataCard.offer.description;
-  renderFeaturesInAd(dataCard);
-  renderPhotosInAd(dataCard);
+  renderFeaturesInAd(dataCard, cardFeatures);
+  renderPhotosInAd(dataCard, cardPhotos);
   cardAvatar.src = dataCard.author.avatar;
   return cardTemplate;
 };
