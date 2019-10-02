@@ -204,7 +204,7 @@ var renderPhotosInAd = function (dataItem) {
   }
 };
 
-// Создаем объявление на основе данных первого объекта.
+// Создаем объявление на основе данных.
 var generateCardBlock = function (dataCard) {
   cardTitle.textContent = dataCard.offer.title;
   cardAdress.textContent = dataCard.offer.address;
@@ -220,14 +220,19 @@ var generateCardBlock = function (dataCard) {
   renderFeaturesInAd(dataCard);
   renderPhotosInAd(dataCard);
   cardAvatar.src = dataCard.author.avatar;
-  elementMap.insertBefore(cardTemplate, mapFilters);
+  return cardTemplate;
+};
+
+// Создаем объявление в разметке.
+var createCard = function (dataCard) {
+  elementMap.insertBefore(generateCardBlock(dataCard[0]), mapFilters);
 };
 
 // Запускаем функции.
 var init = function () {
   activeMap();
   drawPins(makeArrayOfAdvertisments());
-  generateCardBlock(makeArrayOfAdvertisments()[0]);
+  createCard(makeArrayOfAdvertisments());
 };
 
 init();
