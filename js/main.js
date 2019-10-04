@@ -32,7 +32,7 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
-var TYPES_CORRELATION_MAP = {
+/* var TYPES_CORRELATION_MAP = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
   house: 'Дом',
@@ -47,7 +47,7 @@ var TRANSCRIPT_GUESTS = {
   one: ' гостя',
   few: ' гостей',
   other: ' гостей'
-};
+}; */
 var EXCEPTION_RATIO_ROOMS_AND_CAPACITY = {
   '1': ['3', '2', '0'],
   '2': ['3', '0'],
@@ -59,9 +59,9 @@ var elementMap = document.querySelector('.map');
 var mapPinTemplate = document
   .querySelector('#pin')
   .content.querySelector('.map__pin');
-var mapCardTemplate = document
+/* var mapCardTemplate = document
   .querySelector('#card')
-  .content.querySelector('.map__card');
+  .content.querySelector('.map__card'); */
 var mapFilters = elementMap.querySelector('.map__filters-container');
 var pinsBlock = document.querySelector('.map__pins');
 var mainPin = pinsBlock.querySelector('.map__pin--main');
@@ -169,7 +169,7 @@ var drawPins = function (data) {
   pinsBlock.appendChild(fragment);
 };
 
-// Делаем соответствие чисел со словами.
+/* // Делаем соответствие чисел со словами.
 var uniteNumberWithWords = function (number, schedule) {
   var tens = number % 100;
   var units = number % 10;
@@ -183,9 +183,9 @@ var uniteNumberWithWords = function (number, schedule) {
     return schedule.one;
   }
   return schedule.other;
-};
+}; */
 
-// Добавляем доступные удобства в объявление.
+/* // Добавляем доступные удобства в объявление.
 var renderFeaturesInAd = function (dataItem, cardFeatures) {
   cardFeatures.innerHTML = '';
   for (var i = 0; i < dataItem.offer.features.length; i++) {
@@ -194,9 +194,9 @@ var renderFeaturesInAd = function (dataItem, cardFeatures) {
     elementInCardFeatures.classList.add('popup__feature--' + dataItem.offer.features[i]);
     cardFeatures.appendChild(elementInCardFeatures);
   }
-};
+}; */
 
-// Добавляем фотографии в объявление.
+/* // Добавляем фотографии в объявление.
 var renderPhotosInAd = function (dataItem, cardPhotos) {
   var cardPhotoElement = cardPhotos.querySelector('.popup__photo');
   if (dataItem.offer.photos.length === 0) {
@@ -212,9 +212,9 @@ var renderPhotosInAd = function (dataItem, cardPhotos) {
       }
     }
   }
-};
+}; */
 
-// Создаем объявление на основе данных.
+/* // Создаем объявление на основе данных.
 var generateCardBlock = function (dataCard) {
   var cardTemplate = mapCardTemplate.cloneNode(true);
   var cardFeatures = cardTemplate.querySelector('.popup__features');
@@ -243,12 +243,12 @@ var generateCardBlock = function (dataCard) {
   renderPhotosInAd(dataCard, cardPhotos);
   cardAvatar.src = dataCard.author.avatar;
   return cardTemplate;
-};
+}; */
 
-/*// Создаем объявление в разметке.
+/* // Создаем объявление в разметке.
 var createCard = function (dataCard) {
   elementMap.insertBefore(generateCardBlock(dataCard[0]), mapFilters);
-};*/
+}; */
 
 // Функция блокировки элементов.
 var disableFields = function (collection) {
