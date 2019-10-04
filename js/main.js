@@ -245,10 +245,10 @@ var generateCardBlock = function (dataCard) {
   return cardTemplate;
 };
 
-// Создаем объявление в разметке.
+/*// Создаем объявление в разметке.
 var createCard = function (dataCard) {
   elementMap.insertBefore(generateCardBlock(dataCard[0]), mapFilters);
-};
+};*/
 
 // Функция блокировки элементов.
 var disableFields = function (collection) {
