@@ -1,6 +1,5 @@
 'use strict';
 
-var ENTER_KEYCODE = 13;
 var HEIGHT_OF_MAIN_PIN_POINT = 16;
 var NUMBER_OF_OBJECTS = 8;
 var OFFSET_X = 25;
@@ -159,18 +158,28 @@ var enableFields = function (collection) {
   }
 };
 
+var setMapVisibility = function (isVisible) {
+  if (isVisible) {
+    elementMap.classList.remove('map--faded');
+  }
+};
+
+var setAdFormDisabled = function (disabled) {
+  if (disabled) {
+    adForm.classList.remove('ad-form--disabled');
+  }
+};
 // Функция активации страницы.
 var activatePage = function () {
-  if (!isActivePage) {
-    drawPins(makeArrayOfAdvertisments());
-  }
+  drawPins(makeArrayOfAdvertisments());
   isActivePage = true;
-  elementMap.classList.remove('map--faded');
+  setMapVisibility(isActivePage);
   enableFields(fieldElements);
   enableFields(selectsOfMapFilters);
-  adForm.classList.remove('ad-form--disabled');
+  setAdFormDisabled(isActivePage);
   addressInput.readOnly = true;
 };
+
 
 // Функция вычисления значения метки для поля ввода адреса.
 var getValueOfAddressInputField = function () {
@@ -185,19 +194,24 @@ var getValueOfAddressInputField = function () {
   }
 };
 
-// Событие активации страницы при помощи левой кнопки мыши.
-mainPin.addEventListener('mousedown', function () {
-  activatePage();
-  getValueOfAddressInputField();
-});
+// Проверка на то, что страница активирована.
+var isActivatePage = function () {
+  if (elementMap.classList.contains('map--faded')) {
+    return false;
+  }
+  return true;
+};
 
-// Событие активации страницы при помощи клавиши enter.
-mainPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+// Обработчик активации страницы.
+var onMainPinClickHandler = function () {
+  if (!isActivatePage()) {
     activatePage();
     getValueOfAddressInputField();
   }
-});
+};
+
+// Событие активации страницы при помощи левой кнопки мыши.
+mainPin.addEventListener('click', onMainPinClickHandler);
 
 // Функция валидации количества мест и количества комнат.
 var checkRoomsAndCapacityValidity = function () {
