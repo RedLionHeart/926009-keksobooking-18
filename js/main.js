@@ -158,17 +158,24 @@ var enableFields = function (collection) {
   }
 };
 
+// Управление видимостью карты.
 var setMapVisibility = function (isVisible) {
   if (isVisible) {
     elementMap.classList.remove('map--faded');
+  } else {
+    elementMap.classList.add('map--faded');
   }
 };
 
+// Управление изменением формы подачи объявления.
 var setAdFormDisabled = function (disabled) {
   if (disabled) {
     adForm.classList.remove('ad-form--disabled');
+  } else {
+    adForm.classList.add('ad-form--disabled');
   }
 };
+
 // Функция активации страницы.
 var activatePage = function () {
   drawPins(makeArrayOfAdvertisments());
