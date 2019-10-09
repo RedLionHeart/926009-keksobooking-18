@@ -289,19 +289,14 @@ selectCapacity.addEventListener('input', function () {
 });
 
 // Соответствие типа жилья с ценой.
-var setPriceValue = function () {
+var validateAdPrice = function () {
   priceInputAd.min = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
   priceInputAd.placeholder = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
 };
 
 // Событие проверки соответствия типа жилья с ценой за ночь.
-priceInputAd.addEventListener('input', function () {
-  setPriceValue();
-});
-
-// Событие проверки соответствия типа жилья с ценой за ночь.
 typeInputAd.addEventListener('input', function () {
-  setPriceValue();
+  validateAdPrice();
 });
 
 // Синхронизация заезда и выезда.
@@ -433,7 +428,7 @@ var init = function () {
   disableFields(fieldElements);
   disableFields(selectsOfMapFilters);
   getValueOfAddressInputField();
-  setPriceValue();
+  validateAdPrice();
 };
 
 init();
