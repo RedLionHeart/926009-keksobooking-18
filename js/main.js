@@ -1,5 +1,6 @@
 'use strict';
 
+var ESC_KEYCODE = 27;
 var HEIGHT_OF_MAIN_PIN_POINT = 16;
 var NUMBER_OF_OBJECTS = 8;
 var OFFSET_X = 25;
@@ -37,6 +38,28 @@ var EXCEPTION_RATIO_ROOMS_AND_CAPACITY = {
   '3': ['0'],
   '100': ['3', '2', '1']
 };
+var MATCHING_TYPE_WITH_MIN_PRICE = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+var TYPES_CORRELATION_MAP = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец'
+};
+var TRANSCRIPT_ROOMS = {
+  one: ' комната для ',
+  few: ' комнаты для ',
+  other: ' комнат для '
+};
+var TRANSCRIPT_GUESTS = {
+  one: ' гостя',
+  few: ' гостей',
+  other: ' гостей'
+};
 
 var elementMap = document.querySelector('.map');
 var mapPinTemplate = document
@@ -57,6 +80,13 @@ var addressInput = adForm.querySelector('#address');
 var selectRooms = adForm.querySelector('#room_number');
 var selectCapacity = adForm.querySelector('#capacity');
 var optionsCapacity = selectCapacity.querySelectorAll('option');
+var priceInputAd = adForm.querySelector('#price');
+var typeInputAd = adForm.querySelector('#type');
+var timeinSelectAdForm = adForm.querySelector('#timein');
+var timeoutSelectAdForm = adForm.querySelector('#timeout');
+var mapCardTemplate = document
+  .querySelector('#card')
+  .content.querySelector('.map__card');
 
 // Находим случайное целое число из заданного промежутка.
 var getRandomIntegerNumber = function (min, max) {
@@ -124,7 +154,7 @@ var makeArrayOfAdvertisments = function () {
 };
 
 // Генерируем метку объявления.
-var generatePinBlock = function (pinData) {
+var generatePinBlock = function (pinData, index) {
   var templatePin = mapPinTemplate.cloneNode(true);
   var templatePinImage = templatePin.querySelector('img');
   templatePin.style.left = pinData.location.x - OFFSET_X + 'px';
@@ -132,6 +162,7 @@ var generatePinBlock = function (pinData) {
 
   templatePinImage.src = pinData.author.avatar;
   templatePinImage.alt = pinData.offer.title;
+  templatePin.dataset.index = index;
   return templatePin;
 };
 
@@ -139,7 +170,7 @@ var generatePinBlock = function (pinData) {
 var drawPins = function (data) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < NUMBER_OF_OBJECTS; i++) {
-    fragment.appendChild(generatePinBlock(data[i]));
+    fragment.appendChild(generatePinBlock(data[i], i));
   }
   pinsBlock.appendChild(fragment);
 };
@@ -176,18 +207,6 @@ var setAdFormDisabled = function (disabled) {
   }
 };
 
-// Функция активации страницы.
-var activatePage = function () {
-  drawPins(makeArrayOfAdvertisments());
-  isActivePage = true;
-  setMapVisibility(isActivePage);
-  enableFields(fieldElements);
-  enableFields(selectsOfMapFilters);
-  setAdFormDisabled(isActivePage);
-  addressInput.readOnly = true;
-};
-
-
 // Функция вычисления значения метки для поля ввода адреса.
 var getValueOfAddressInputField = function () {
   var calculateCoordX = Math.floor(mainPinCoordLeft + mainPinWidth / 2);
@@ -219,6 +238,17 @@ var onMainPinClickHandler = function () {
 
 // Событие активации страницы при помощи левой кнопки мыши.
 mainPin.addEventListener('click', onMainPinClickHandler);
+
+// Функция активации страницы.
+var activatePage = function () {
+  drawPins(makeArrayOfAdvertisments());
+  isActivePage = true;
+  setMapVisibility(isActivePage);
+  enableFields(fieldElements);
+  enableFields(selectsOfMapFilters);
+  setAdFormDisabled(isActivePage);
+  addressInput.readOnly = true;
+};
 
 // Функция валидации количества мест и количества комнат.
 var checkRoomsAndCapacityValidity = function () {
@@ -258,6 +288,139 @@ selectCapacity.addEventListener('input', function () {
   checkRoomsAndCapacityValidity();
 });
 
+// Соответствие типа жилья с ценой.
+var validateAdPrice = function () {
+  priceInputAd.min = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
+  priceInputAd.placeholder = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
+};
+
+// Событие проверки соответствия типа жилья с ценой за ночь.
+typeInputAd.addEventListener('input', function () {
+  validateAdPrice();
+});
+
+// Синхронизация заезда и выезда.
+timeoutSelectAdForm.addEventListener('change', function () {
+  timeinSelectAdForm.value = timeoutSelectAdForm.value;
+});
+
+// Синхронизация заезда и выезда.
+timeinSelectAdForm.addEventListener('change', function () {
+  timeoutSelectAdForm.value = timeinSelectAdForm.value;
+});
+
+// Делаем соответствие чисел со словами.
+var uniteNumberWithWords = function (number, schedule) {
+  var tens = number % 100;
+  var units = number % 10;
+  if (tens > 10 && tens < 20) {
+    return schedule.other;
+  }
+  if (units > 1 && units < 5) {
+    return schedule.few;
+  }
+  if (units === 1) {
+    return schedule.one;
+  }
+  return schedule.other;
+};
+
+// Добавляем доступные удобства в объявление.
+var renderFeaturesInAd = function (dataItem, cardFeatures) {
+  cardFeatures.innerHTML = '';
+  for (var i = 0; i < dataItem.offer.features.length; i++) {
+    var elementInCardFeatures = document.createElement('li');
+    elementInCardFeatures.classList.add('popup__feature');
+    elementInCardFeatures.classList.add('popup__feature--' + dataItem.offer.features[i]);
+    cardFeatures.appendChild(elementInCardFeatures);
+  }
+};
+
+// Добавляем фотографии в объявление.
+var renderPhotosInAd = function (dataItem, cardPhotos) {
+  var cardPhotoElement = cardPhotos.querySelector('.popup__photo');
+  if (dataItem.offer.photos.length === 0) {
+    cardPhotos.innerHTML = '';
+  } else {
+    for (var i = 0; i < dataItem.offer.photos.length; i++) {
+      if (i === 0) {
+        cardPhotoElement.src = dataItem.offer.photos[i];
+      } else {
+        var clonePhotoElement = cardPhotoElement.cloneNode(true);
+        clonePhotoElement.src = dataItem.offer.photos[i];
+        cardPhotos.appendChild(clonePhotoElement);
+      }
+    }
+  }
+};
+
+// Создаем объявление на основе данных.
+var generateCardBlock = function (dataCard) {
+  var cardTemplate = mapCardTemplate.cloneNode(true);
+  var cardFeatures = cardTemplate.querySelector('.popup__features');
+  var cardPhotos = cardTemplate.querySelector('.popup__photos');
+  var cardTitle = cardTemplate.querySelector('.popup__title');
+  var cardAddress = cardTemplate.querySelector('.popup__text--address');
+  var cardPrice = cardTemplate.querySelector('.popup__text--price');
+  var cardType = cardTemplate.querySelector('.popup__type');
+  var cardCapacity = cardTemplate.querySelector('.popup__text--capacity');
+  var cardTime = cardTemplate.querySelector('.popup__text--time');
+  var cardDescription = cardTemplate.querySelector('.popup__description');
+  var cardAvatar = cardTemplate.querySelector('.popup__avatar');
+
+  cardTitle.textContent = dataCard.offer.title;
+  cardAddress.textContent = dataCard.offer.address;
+  cardPrice.textContent = dataCard.offer.price + '₽/ночь';
+  cardType.textContent = TYPES_CORRELATION_MAP[dataCard.offer.type];
+  cardCapacity.textContent =
+    dataCard.offer.rooms +
+    uniteNumberWithWords(dataCard.offer.rooms, TRANSCRIPT_ROOMS) +
+    dataCard.offer.guests +
+    uniteNumberWithWords(dataCard.offer.guests, TRANSCRIPT_GUESTS);
+  cardTime.textContent = 'Заезд после ' + dataCard.offer.checkin + ', выезд до ' + dataCard.offer.checkout;
+  cardDescription.textContent = dataCard.offer.description;
+  renderFeaturesInAd(dataCard, cardFeatures);
+  renderPhotosInAd(dataCard, cardPhotos);
+  cardAvatar.src = dataCard.author.avatar;
+  return cardTemplate;
+};
+
+// Создаем объявление в разметке.
+var createCard = function (dataCard) {
+  elementMap.insertBefore(dataCard, mapFilters);
+};
+
+// Функция удаления объявления из разметки.
+var closeAdPopup = function () {
+  var adPopup = elementMap.querySelector('.map__card');
+  if (elementMap.contains(adPopup)) {
+    elementMap.removeChild(adPopup);
+  }
+};
+
+// Событие открытия объявления по клику.
+pinsBlock.addEventListener('click', function (evt) {
+  if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+    closeAdPopup();
+    var currentData = evt.target.closest('.map__pin').dataset.index;
+    createCard(generateCardBlock(makeArrayOfAdvertisments()[currentData]));
+  }
+});
+
+// Событие закрытия объявления по клику на крестик.
+document.addEventListener('click', function (evt) {
+  if (evt.target.matches('.popup__close')) {
+    closeAdPopup();
+  }
+});
+
+// Событие закрытия объявления при нажатии на esc.
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeAdPopup();
+  }
+});
+
 // Запускаем функции.
 var init = function () {
   checkRoomsAndCapacityValidity();
@@ -265,6 +428,7 @@ var init = function () {
   disableFields(fieldElements);
   disableFields(selectsOfMapFilters);
   getValueOfAddressInputField();
+  validateAdPrice();
 };
 
 init();
