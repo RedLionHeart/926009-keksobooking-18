@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var pinsBlock = document.querySelector('.map__pins');
+
 
   // Добавляем метки в разметку.
   var drawPins = function (data) {
@@ -9,7 +9,7 @@
     for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
       fragment.appendChild(window.pin.generatePinBlock(data[i], i));
     }
-    pinsBlock.appendChild(fragment);
+    window.util.pinsBlock.appendChild(fragment);
   };
 
   // Создаем объявление в разметке.
@@ -26,7 +26,7 @@
   };
 
   // Событие открытия объявления по клику.
-  pinsBlock.addEventListener('click', function (evt) {
+  window.util.pinsBlock.addEventListener('click', function (evt) {
     if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
       closeAdPopup();
       var currentData = evt.target.closest('.map__pin').dataset.index;
@@ -49,7 +49,6 @@
   });
 
   window.map = {
-    pinsBlock: pinsBlock,
     drawPins: drawPins
   };
 })();

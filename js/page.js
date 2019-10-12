@@ -1,9 +1,7 @@
 'use strict';
 
 (function () {
-  var isActivePage = false;
-  var adForm = document.querySelector('.ad-form');
-  var fieldElements = adForm.querySelectorAll('fieldset');
+  var fieldElements = window.form.adForm.querySelectorAll('fieldset');
   var selectsOfMapFilters = window.util.mapFilters.querySelectorAll('select');
 
   // Функция блокировки элементов.
@@ -32,9 +30,9 @@
   // Управление изменением формы подачи объявления.
   var setAdFormDisabled = function (disabled) {
     if (disabled) {
-      adForm.classList.remove('ad-form--disabled');
+      window.form.adForm.classList.remove('ad-form--disabled');
     } else {
-      adForm.classList.add('ad-form--disabled');
+      window.form.adForm.classList.add('ad-form--disabled');
     }
   };
 
@@ -60,11 +58,11 @@
   // Функция активации страницы.
   var activatePage = function () {
     window.map.drawPins(window.data.makeArrayOfAdvertisments());
-    isActivePage = true;
-    setMapVisibility(isActivePage);
+    window.util.isActivePage = true;
+    setMapVisibility(window.util.isActivePage);
     enableFields(fieldElements);
     enableFields(selectsOfMapFilters);
-    setAdFormDisabled(isActivePage);
+    setAdFormDisabled(window.util.isActivePage);
     window.form.addressInput.readOnly = true;
   };
 
@@ -77,9 +75,4 @@
     window.form.getValueOfAddressInputField();
     window.form.validateAdPrice();
   })();
-
-  window.page = {
-    adForm: adForm,
-    isActivePage: isActivePage
-  };
 })();

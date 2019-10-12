@@ -6,7 +6,9 @@
 
   var elementMap = document.querySelector('.map');
   var mapFilters = elementMap.querySelector('.map__filters-container');
-  var mainPin = window.map.pinsBlock.querySelector('.map__pin--main');
+  var pinsBlock = document.querySelector('.map__pins');
+  var mainPin = pinsBlock.querySelector('.map__pin--main');
+  var isActivePage = false;
 
   // Находим случайное целое число из заданного промежутка.
   var getRandomIntegerNumber = function (min, max) {
@@ -44,9 +46,11 @@
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     NUMBER_OF_OBJECTS: NUMBER_OF_OBJECTS,
+    isActivePage: isActivePage,
     elementMap: elementMap,
     mapFilters: mapFilters,
     mainPin: mainPin,
+    pinsBlock: pinsBlock,
     getRandomIntegerNumber: getRandomIntegerNumber,
     getRandomSubarray: getRandomSubarray,
     getRandomValueFromArray: getRandomValueFromArray,

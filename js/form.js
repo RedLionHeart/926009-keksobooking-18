@@ -14,19 +14,19 @@
     house: 5000,
     palace: 10000
   };
-
+  var adForm = document.querySelector('.ad-form');
   var mainPinCoordLeft = parseFloat(window.util.mainPin.style.left);
   var mainPinCoordTop = parseFloat(window.util.mainPin.style.top);
   var mainPinWidth = window.util.mainPin.offsetWidth;
   var mainPinHeight = window.util.mainPin.offsetHeight;
-  var addressInput = window.page.adForm.querySelector('#address');
-  var selectRooms = window.page.adForm.querySelector('#room_number');
-  var selectCapacity = window.page.adForm.querySelector('#capacity');
+  var addressInput = adForm.querySelector('#address');
+  var selectRooms = adForm.querySelector('#room_number');
+  var selectCapacity = adForm.querySelector('#capacity');
   var optionsCapacity = selectCapacity.querySelectorAll('option');
-  var priceInputAd = window.page.adForm.querySelector('#price');
-  var typeInputAd = window.page.adForm.querySelector('#type');
-  var timeinSelectAdForm = window.page.adForm.querySelector('#timein');
-  var timeoutSelectAdForm = window.page.adForm.querySelector('#timeout');
+  var priceInputAd = adForm.querySelector('#price');
+  var typeInputAd = adForm.querySelector('#type');
+  var timeinSelectAdForm = adForm.querySelector('#timein');
+  var timeoutSelectAdForm = adForm.querySelector('#timeout');
 
   // Функция вычисления значения метки для поля ввода адреса.
   var getValueOfAddressInputField = function () {
@@ -34,7 +34,7 @@
     var calculateUnactiveCoordY = Math.floor(mainPinCoordTop + mainPinHeight / 2);
     var calculateActiveCoordY = Math.floor(mainPinCoordTop + mainPinHeight + HEIGHT_OF_MAIN_PIN_POINT);
 
-    if (window.page.isActivePage) {
+    if (window.util.isActivePage) {
       addressInput.value = calculateCoordX + ', ' + calculateActiveCoordY;
     } else {
       addressInput.value = calculateCoordX + ', ' + calculateUnactiveCoordY;
@@ -103,6 +103,7 @@
   window.form = {
     getValueOfAddressInputField: getValueOfAddressInputField,
     addressInput: addressInput,
+    adForm: adForm,
     checkRoomsAndCapacityValidity: checkRoomsAndCapacityValidity,
     setOptionsForRooms: setOptionsForRooms,
     validateAdPrice: validateAdPrice
