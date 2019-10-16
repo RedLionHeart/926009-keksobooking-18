@@ -29,13 +29,14 @@
   var timeoutSelectAdForm = adForm.querySelector('#timeout');
 
   // Функция вычисления значения метки для поля ввода адреса.
-  var getValueOfAddressInputField = function () {
+  var getValueOfAddressInputField = function (coordY, coordX) {
     var calculateCoordX = Math.floor(mainPinCoordLeft + mainPinWidth / 2);
     var calculateUnactiveCoordY = Math.floor(mainPinCoordTop + mainPinHeight / 2);
-    var calculateActiveCoordY = Math.floor(mainPinCoordTop + mainPinHeight + HEIGHT_OF_MAIN_PIN_POINT);
+    var calculateActiveCoordY = Math.floor(parseFloat(coordY) + mainPinHeight + HEIGHT_OF_MAIN_PIN_POINT);
+    var calculateActiveCoordX = Math.floor(parseFloat(coordX) + mainPinWidth / 2);
 
     if (window.util.isActivePage) {
-      addressInput.value = calculateCoordX + ', ' + calculateActiveCoordY;
+      addressInput.value = calculateActiveCoordX + ', ' + calculateActiveCoordY;
     } else {
       addressInput.value = calculateCoordX + ', ' + calculateUnactiveCoordY;
     }
@@ -104,6 +105,9 @@
     getValueOfAddressInputField: getValueOfAddressInputField,
     addressInput: addressInput,
     adForm: adForm,
+    mainPinWidth: mainPinWidth,
+    mainPinHeight: mainPinHeight,
+    HEIGHT_OF_MAIN_PIN_POINT: HEIGHT_OF_MAIN_PIN_POINT,
     checkRoomsAndCapacityValidity: checkRoomsAndCapacityValidity,
     setOptionsForRooms: setOptionsForRooms,
     validateAdPrice: validateAdPrice

@@ -38,22 +38,78 @@
 
   // Проверка на то, что страница активирована.
   var isActivatePage = function () {
-    if (window.util.elementMap.classList.contains('map--faded')) {
-      return false;
-    }
-    return true;
+    return !window.util.elementMap.classList.contains('map--faded');
   };
 
   // Обработчик активации страницы.
   var onMainPinClickHandler = function () {
     if (!isActivatePage()) {
       activatePage();
-      window.form.getValueOfAddressInputField();
     }
   };
 
   // Событие активации страницы при помощи левой кнопки мыши.
-  window.util.mainPin.addEventListener('click', onMainPinClickHandler);
+  window.util.mainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    onMainPinClickHandler();
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      var coordTopY = window.util.mainPin.offsetTop - shift.y;
+      var calculateCoordYMin = window.data.LOCATION_START_Y -
+        window.form.mainPinWidth -
+        window.form.HEIGHT_OF_MAIN_PIN_POINT;
+      var calculateCoordYMax = window.data.LOCATION_END_Y -
+        window.form.mainPinHeight -
+        window.form.HEIGHT_OF_MAIN_PIN_POINT;
+      var coordLeftX = window.util.mainPin.offsetLeft - shift.x;
+      var calculateCoordXMin = 0 - window.util.mainPin.offsetWidth / 2;
+      var calculateCoordXMax = window.util.elementMap.offsetWidth - window.util.mainPin.offsetWidth / 2;
+      if (coordTopY < calculateCoordYMin) {
+        coordTopY = calculateCoordYMin;
+      } else if (coordTopY > calculateCoordYMax) {
+        coordTopY = calculateCoordYMax;
+      }
+      if (coordLeftX < calculateCoordXMin) {
+        coordLeftX = calculateCoordXMin;
+      } else if (
+        coordLeftX > calculateCoordXMax
+      ) {
+        coordLeftX = calculateCoordXMax;
+      }
+      window.util.mainPin.style.top = coordTopY + 'px';
+      window.util.mainPin.style.left = coordLeftX + 'px';
+      window.form.getValueOfAddressInputField(
+          window.util.mainPin.style.top,
+          window.util.mainPin.style.left
+      );
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      window.form.getValueOfAddressInputField(
+          window.util.mainPin.style.top,
+          window.util.mainPin.style.left
+      );
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 
   // Функция активации страницы.
   var activatePage = function () {
