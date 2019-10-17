@@ -107,6 +107,8 @@
   };
 
   window.data = {
+    LOCATION_START_Y: LOCATION_START_Y,
+    LOCATION_END_Y: LOCATION_END_Y,
     makeArrayOfAdvertisments: makeArrayOfAdvertisments,
     renderFeaturesInAd: renderFeaturesInAd,
     renderPhotosInAd: renderPhotosInAd
