@@ -3,6 +3,7 @@
 (function () {
   var fieldElements = window.form.adForm.querySelectorAll('fieldset');
   var selectsOfMapFilters = window.util.mapFilters.querySelectorAll('select');
+  var startCoords = null;
 
   // Функция блокировки элементов.
   var disableFields = function (collection) {
@@ -48,72 +49,88 @@
     }
   };
 
-  var setStartCoords = function (X, Y) {
-    var startCoords = {
-      x: X,
-      y: Y
+  // Функция вычисляет значение начальных координат.
+  var getCoords = function (x, y) {
+    return {
+      x: x,
+      y: y
     };
-    return startCoords;
   };
 
-  // Событие активации страницы при помощи левой кнопки мыши.
-  window.util.mainPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-    var oldCoord = setStartCoords(evt.clientX, evt.clientY);
-    onMainPinClickHandler();
+  // Функция переопределяющая начальные координаты.
+  var setStartCoords = function (x, y) {
+    startCoords = getCoords(x, y);
+  };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      window.form.getValueOfAddressInputField(
-          window.util.mainPin.style.top,
-          window.util.mainPin.style.left
-      );
+  // Функция ограничивающая перемещение главного пина.
+  var compareValueCoord = function (coordDirection, coordMin, coordMax) {
+    if (coordDirection < coordMin) {
+      coordDirection = coordMin;
+    } else if (coordDirection > coordMax) {
+      coordDirection = coordMax;
+    } else {
+      coordDirection = coordDirection;
+    }
+    return coordDirection;
+  };
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-    document.addEventListener('mousemove', onMouseMove(evt, oldCoord));
-    document.addEventListener('mouseup', onMouseUp);
-  });
-
-  var onMouseMove = function (moveEvt, oldCoord) {
+  // Событие передвижения мыши.
+  var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
-    var shift = {
-      x: oldCoord.x - moveEvt.clientX,
-      y: oldCoord.y - moveEvt.clientY
-    };
-    oldCoord.x = moveEvt.clientX;
-    oldCoord.y = moveEvt.clientY;
+
+    var shift = getCoords(
+        startCoords.x - moveEvt.clientX,
+        startCoords.y - moveEvt.clientY
+    );
+    setStartCoords(moveEvt.clientX, moveEvt.clientY);
 
     var coordTopY = window.util.mainPin.offsetTop - shift.y;
-    var calculateCoordYMin = window.data.LOCATION_START_Y -
+    var calculateCoordYMin =
+      window.data.LOCATION_START_Y -
       window.form.mainPinWidth -
       window.form.HEIGHT_OF_MAIN_PIN_POINT;
-    var calculateCoordYMax = window.data.LOCATION_END_Y -
+    var calculateCoordYMax =
+      window.data.LOCATION_END_Y -
       window.form.mainPinHeight -
       window.form.HEIGHT_OF_MAIN_PIN_POINT;
     var coordLeftX = window.util.mainPin.offsetLeft - shift.x;
     var calculateCoordXMin = 0 - window.util.mainPin.offsetWidth / 2;
-    var calculateCoordXMax = window.util.elementMap.offsetWidth - window.util.mainPin.offsetWidth / 2;
-    if (coordTopY < calculateCoordYMin) {
-      coordTopY = calculateCoordYMin;
-    } else if (coordTopY > calculateCoordYMax) {
-      coordTopY = calculateCoordYMax;
-    }
-    if (coordLeftX < calculateCoordXMin) {
-      coordLeftX = calculateCoordXMin;
-    } else if (
-      coordLeftX > calculateCoordXMax
-    ) {
-      coordLeftX = calculateCoordXMax;
-    }
-    window.util.mainPin.style.top = coordTopY + 'px';
-    window.util.mainPin.style.left = coordLeftX + 'px';
+    var calculateCoordXMax =
+      window.util.elementMap.offsetWidth - window.util.mainPin.offsetWidth / 2;
+
+    window.util.mainPin.style.top =
+      compareValueCoord(coordTopY, calculateCoordYMin, calculateCoordYMax) +
+      'px';
+    window.util.mainPin.style.left =
+      compareValueCoord(coordLeftX, calculateCoordXMin, calculateCoordXMax) +
+      'px';
     window.form.getValueOfAddressInputField(
         window.util.mainPin.style.top,
         window.util.mainPin.style.left
     );
   };
+
+  // Событие отпускания кнопки мыши.
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    window.form.getValueOfAddressInputField(
+        window.util.mainPin.style.top,
+        window.util.mainPin.style.left
+    );
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  // Событие активации страницы при нажатии на кнопку мыши.
+  window.util.mainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    setStartCoords(evt.clientX, evt.clientY);
+    onMainPinClickHandler();
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 
   // Функция активации страницы.
   var activatePage = function () {
