@@ -1,20 +1,39 @@
 'use strict';
 
 (function () {
-
-
-  // Добавляем метки в разметку.
-  var drawPins = function (data) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
-      fragment.appendChild(window.pin.generatePinBlock(data[i], i));
-    }
-    window.util.pinsBlock.appendChild(fragment);
-  };
+  var mapErrorTemplate = document
+    .querySelector('#error')
+    .content.querySelector('.error');
+  var mainBlock = document.querySelector('main');
 
   // Создаем объявление в разметке.
   var createCard = function (dataCard) {
     window.util.elementMap.insertBefore(dataCard, window.util.mapFilters);
+  };
+
+  // Обработчик успешной загрузки.
+  var successHandler = function (data) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
+      if (data[i].hasOwnProperty('offer')) {
+        fragment.appendChild(window.pin.generatePinBlock(data[i], i));
+      }
+    }
+    window.util.pinsBlock.appendChild(fragment);
+  };
+
+  // Обработчик ошибочной загрузки.
+  var errorHandler = function (errorMessage) {
+    var errorTemplate = mapErrorTemplate.cloneNode(true);
+    var blockErrorMessage = errorTemplate.querySelector('.error__message');
+
+    blockErrorMessage.textContent = errorMessage;
+    mainBlock.insertAdjacentElement('afterbegin', errorTemplate);
+  };
+
+  // Запускаем функцию загрузки пинов.
+  var loadPins = function () {
+    window.backend.load(successHandler, errorHandler);
   };
 
   // Функция удаления объявления из разметки.
@@ -49,6 +68,6 @@
   });
 
   window.map = {
-    drawPins: drawPins
+    loadPins: loadPins
   };
 })();
