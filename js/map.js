@@ -11,11 +11,11 @@
     window.util.elementMap.insertBefore(dataCard, window.util.mapFilters);
   };
 
-  // Обработчик успешной загрузки.
-  var successHandler = function (data) {
+  // Функция успешной загрузки.
+  var drawPins = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
-      if (data[i].hasOwnProperty('offer')) {
+      if (data[i].offer !== undefined){
         fragment.appendChild(window.pin.generatePinBlock(data[i], i));
       }
     }
@@ -33,7 +33,7 @@
 
   // Запускаем функцию загрузки пинов.
   var loadPins = function () {
-    window.backend.load(successHandler, errorHandler);
+    window.backend.load(drawPins, errorHandler, window.backend.API_PATHS);
   };
 
   // Функция удаления объявления из разметки.

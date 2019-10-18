@@ -1,16 +1,18 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/keksobooking/data';
+  var API_PATHS = {
+    data: 'https://js.dump.academy/keksobooking/data'
+  };
   var SUCCESS_STATUS = 200;
   var TIMEOUT = 10000;
 
   // Функция получения данных с сервера.
-  var load = function (onLoad, onError) {
+  var load = function (onLoad, onError, API_PATHS) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
-    xhr.open('GET', URL);
+    xhr.open('GET', API_PATHS.data);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_STATUS) {
@@ -32,6 +34,7 @@
   };
 
   window.backend = {
-    load: load
+    load: load,
+    API_PATHS: API_PATHS
   };
 })();
