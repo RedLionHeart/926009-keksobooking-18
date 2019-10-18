@@ -134,7 +134,7 @@
 
   // Функция активации страницы.
   var activatePage = function () {
-    window.map.drawPins(window.data.makeArrayOfAdvertisments());
+    window.map.loadPins();
     window.util.isActivePage = true;
     setMapVisibility(window.util.isActivePage);
     enableFields(fieldElements);
