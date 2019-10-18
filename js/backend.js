@@ -8,11 +8,11 @@
   var TIMEOUT = 10000;
 
   // Функция получения данных с сервера.
-  var load = function (onLoad, onError, API_PATHS) {
+  var load = function (onLoad, onError, API_PATH) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
-    xhr.open('GET', API_PATHS.data);
+    xhr.open('GET', API_PATH.data);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_STATUS) {

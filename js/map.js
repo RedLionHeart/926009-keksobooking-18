@@ -15,7 +15,7 @@
   var drawPins = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
-      if (data[i].offer !== undefined){
+      if (data[i].offer !== undefined) {
         fragment.appendChild(window.pin.generatePinBlock(data[i], i));
       }
     }
