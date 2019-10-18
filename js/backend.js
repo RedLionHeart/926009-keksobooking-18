@@ -8,11 +8,11 @@
   var TIMEOUT = 10000;
 
   // Функция получения данных с сервера.
-  var load = function (onLoad, onError, API_PATH) {
+  var xhrGet = function (onLoad, onError, apiPath) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
-    xhr.open('GET', API_PATH.data);
+    xhr.open('GET', apiPath);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_STATUS) {
@@ -33,8 +33,12 @@
     xhr.send();
   };
 
+  // Получение списка объявлений
+  var getKeksobookingData = function (onLoad, onError) {
+    xhrGet(onLoad, onError, API_PATHS.data);
+  };
+
   window.backend = {
-    load: load,
-    API_PATHS: API_PATHS
+    getKeksobookingData: getKeksobookingData
   };
 })();

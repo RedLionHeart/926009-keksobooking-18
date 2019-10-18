@@ -33,7 +33,7 @@
 
   // Запускаем функцию загрузки пинов.
   var loadPins = function () {
-    window.backend.load(drawPins, errorHandler, window.backend.API_PATHS);
+    window.backend.getKeksobookingData(drawPins, errorHandler);
   };
 
   // Функция удаления объявления из разметки.
