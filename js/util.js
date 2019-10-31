@@ -9,6 +9,17 @@
   var pinsBlock = document.querySelector('.map__pins');
   var mainPin = pinsBlock.querySelector('.map__pin--main');
   var isActivePage = false;
+  var mapErrorTemplate = document
+    .querySelector('#error')
+    .content.querySelector('.error');
+  var errorTemplate = mapErrorTemplate.cloneNode(true);
+  var buttonError = errorTemplate.querySelector('.error__button');
+  var blockErrorMessage = errorTemplate.querySelector('.error__message');
+  var successTemplate = document
+    .querySelector('#success')
+    .content.querySelector('.success');
+  var successSendFormTemplate = successTemplate.cloneNode(true);
+  var successMessage = successSendFormTemplate.querySelector('p');
 
   // Находим случайное целое число из заданного промежутка.
   var getRandomIntegerNumber = function (min, max) {
@@ -51,6 +62,13 @@
     mapFilters: mapFilters,
     mainPin: mainPin,
     pinsBlock: pinsBlock,
+    mapErrorTemplate: mapErrorTemplate,
+    blockErrorMessage: blockErrorMessage,
+    buttonError: buttonError,
+    errorTemplate: errorTemplate,
+    successTemplate: successTemplate,
+    successSendFormTemplate: successSendFormTemplate,
+    successMessage: successMessage,
     getRandomIntegerNumber: getRandomIntegerNumber,
     getRandomSubarray: getRandomSubarray,
     getRandomValueFromArray: getRandomValueFromArray,
