@@ -101,7 +101,67 @@
     timeoutSelectAdForm.value = timeinSelectAdForm.value;
   });
 
+  // Функция удаления элементов
+  var deleteElements = function (collection) {
+    for (var i = 0; i < collection.length; i++) {
+      collection[i].remove();
+    }
+  };
+
+  // Функция удаления соответствующего сообщения
+  var generateMessage = function (template, message) {
+
+    // Событие закрытия сообщения успешной отправки формы клавишей esc
+    var onEscPress = function (evt) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        window.map.mainBlock.removeChild(template);
+      }
+      document.removeEventListener('keydown', onEscPress);
+    };
+
+    // Событие закрытия сообщения успешной отправки формы путем клика вне области сообщения.
+    var onClickOverArea = function (evt) {
+      if (evt.target !== message) {
+        window.map.mainBlock.removeChild(template);
+        document.removeEventListener('keydown', onEscPress);
+      }
+    };
+
+    if (template.contains(window.util.buttonError)) {
+      window.util.buttonError.addEventListener('click', function () {
+        window.map.mainBlock.removeChild(template);
+      });
+    }
+
+    document.addEventListener('keydown', onEscPress);
+    template.addEventListener('click', onClickOverArea);
+  };
+
+  // Событие успешной отправки формы
+  var successHandler = function () {
+    var mapPinsWithoutMainPin = window.util.pinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    adForm.reset();
+    deleteElements(mapPinsWithoutMainPin);
+    window.page.deactivatePage();
+    window.map.mainBlock.insertAdjacentElement('afterbegin', window.util.successSendFormTemplate);
+    generateMessage(window.util.successSendFormTemplate, window.util.successMessage);
+  };
+
+  // Событие отправки формы с ошибками
+  var errorHandler = function () {
+    generateMessage(window.util.errorTemplate, window.util.blockErrorMessage);
+  };
+
+  // Событие отправки данных на сервер
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.sendKeksobookingData(new FormData(adForm), successHandler, errorHandler);
+    evt.preventDefault();
+  });
+
   window.form = {
+    mainPinCoordTop: mainPinCoordTop,
+    mainPinCoordLeft: mainPinCoordLeft,
     getValueOfAddressInputField: getValueOfAddressInputField,
     addressInput: addressInput,
     adForm: adForm,
@@ -110,6 +170,7 @@
     HEIGHT_OF_MAIN_PIN_POINT: HEIGHT_OF_MAIN_PIN_POINT,
     checkRoomsAndCapacityValidity: checkRoomsAndCapacityValidity,
     setOptionsForRooms: setOptionsForRooms,
-    validateAdPrice: validateAdPrice
+    validateAdPrice: validateAdPrice,
+    deleteElements: deleteElements
   };
 })();

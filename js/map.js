@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var mapErrorTemplate = document
-    .querySelector('#error')
-    .content.querySelector('.error');
   var mainBlock = document.querySelector('main');
 
   // Создаем объявление в разметке.
@@ -20,15 +17,18 @@
       }
     }
     window.util.pinsBlock.appendChild(fragment);
+    if (mainBlock.contains(window.util.errorTemplate)) {
+      mainBlock.removeChild(window.util.errorTemplate);
+    }
   };
 
   // Обработчик ошибочной загрузки.
   var errorHandler = function (errorMessage) {
-    var errorTemplate = mapErrorTemplate.cloneNode(true);
-    var blockErrorMessage = errorTemplate.querySelector('.error__message');
-
-    blockErrorMessage.textContent = errorMessage;
-    mainBlock.insertAdjacentElement('afterbegin', errorTemplate);
+    window.util.blockErrorMessage.textContent = errorMessage;
+    mainBlock.insertAdjacentElement('afterbegin', window.util.errorTemplate);
+    window.util.buttonError.addEventListener('click', function () {
+      loadPins();
+    });
   };
 
   // Запускаем функцию загрузки пинов.
@@ -68,6 +68,8 @@
   });
 
   window.map = {
-    loadPins: loadPins
+    mainBlock: mainBlock,
+    loadPins: loadPins,
+    closeAdPopup: closeAdPopup
   };
 })();

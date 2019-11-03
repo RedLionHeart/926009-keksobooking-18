@@ -143,6 +143,19 @@
     window.form.addressInput.readOnly = true;
   };
 
+  // Функция деактивации страницы
+  var deactivatePage = function () {
+    disableFields(fieldElements);
+    disableFields(selectsOfMapFilters);
+    window.util.isActivePage = false;
+    setMapVisibility(window.util.isActivePage);
+    setAdFormDisabled(window.util.isActivePage);
+    window.form.getValueOfAddressInputField();
+    window.util.mainPin.style.top = window.form.mainPinCoordTop + 'px';
+    window.util.mainPin.style.left = window.form.mainPinCoordLeft + 'px';
+    window.map.closeAdPopup();
+  };
+
   // Запускаем функции.
   (function () {
     window.form.checkRoomsAndCapacityValidity();
@@ -152,4 +165,8 @@
     window.form.getValueOfAddressInputField();
     window.form.validateAdPrice();
   })();
+
+  window.page = {
+    deactivatePage: deactivatePage
+  };
 })();
