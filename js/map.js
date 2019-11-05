@@ -11,7 +11,7 @@
   // Функция успешной загрузки.
   var drawPins = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.util.NUMBER_OF_OBJECTS; i++) {
+    for (var i = 0; i < data.length; i++) {
       if (data[i].offer !== undefined) {
         fragment.appendChild(window.pin.generatePinBlock(data[i], i));
       }
@@ -33,7 +33,10 @@
 
   // Запускаем функцию загрузки пинов.
   var loadPins = function () {
-    window.backend.getKeksobookingData(drawPins, errorHandler);
+    window.backend.getKeksobookingData(function (data) {
+      window.defaultData = data;
+      drawPins(window.filters.mainFilter());
+    }, errorHandler);
   };
 
   // Функция удаления объявления из разметки.
@@ -69,6 +72,7 @@
 
   window.map = {
     mainBlock: mainBlock,
+    drawPins: drawPins,
     loadPins: loadPins,
     closeAdPopup: closeAdPopup
   };

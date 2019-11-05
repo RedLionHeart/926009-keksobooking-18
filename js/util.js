@@ -2,7 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-  var NUMBER_OF_OBJECTS = 8;
+  var NUMBER_OF_OBJECTS = 5;
 
   var elementMap = document.querySelector('.map');
   var mapFilters = elementMap.querySelector('.map__filters-container');
