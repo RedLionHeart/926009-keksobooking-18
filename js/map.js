@@ -42,17 +42,25 @@
   // Функция удаления объявления из разметки.
   var closeAdPopup = function () {
     var adPopup = window.util.elementMap.querySelector('.map__card');
+    var pinsWithoutMain = window.util.pinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
     if (window.util.elementMap.contains(adPopup)) {
       window.util.elementMap.removeChild(adPopup);
     }
+    pinsWithoutMain.forEach(function (element) {
+      element.classList.remove('map__pin--active');
+    });
   };
 
   // Событие открытия объявления по клику.
   window.util.pinsBlock.addEventListener('click', function (evt) {
-    if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+    var targetPin = evt.target.closest('.map__pin:not(.map__pin--main)');
+    if (targetPin) {
       closeAdPopup();
-      var currentData = evt.target.closest('.map__pin').dataset.index;
-      createCard(window.card.generateCardBlock(window.data.makeArrayOfAdvertisments()[currentData]));
+      var currentData = evt.target.closest('.map__pin').querySelector('img').alt;
+      targetPin.classList.add('map__pin--active');
+      createCard(window.card.generateCardBlock(window.defaultData.find(function (element) {
+        return element.offer.title === currentData;
+      })));
     }
   });
 
