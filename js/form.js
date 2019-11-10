@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var DEFAULT_PREVIEW = 'img/muffin-grey.svg';
   var HEIGHT_OF_MAIN_PIN_POINT = 16;
   var EXCEPTION_RATIO_ROOMS_AND_CAPACITY = {
     '1': ['3', '2', '0'],
@@ -27,6 +28,11 @@
   var typeInputAd = adForm.querySelector('#type');
   var timeinSelectAdForm = adForm.querySelector('#timein');
   var timeoutSelectAdForm = adForm.querySelector('#timeout');
+  var previewHeader = adForm.querySelector('.ad-form-header__preview img');
+  var previewPhoto = adForm.querySelector('.ad-form__photo');
+  var fileChooserAvatar = adForm.querySelector('#avatar');
+  var fileChooserPhoto = adForm.querySelector('#images');
+
 
   // Функция вычисления значения метки для поля ввода адреса.
   var getValueOfAddressInputField = function (coordY, coordX) {
@@ -101,6 +107,22 @@
     timeoutSelectAdForm.value = timeinSelectAdForm.value;
   });
 
+  // Событие изменения аватарки автора объявления.
+  fileChooserAvatar.addEventListener('change', function () {
+    window.image.addPicture(fileChooserAvatar, previewHeader, false);
+  });
+
+  // Событие изменения фотографии жилья объявления.
+  fileChooserPhoto.addEventListener('change', function () {
+    window.image.addPicture(fileChooserPhoto, previewPhoto, true);
+  });
+
+  // Функция сброса картинок в начальное положение.
+  var resetImages = function () {
+    previewHeader.src = DEFAULT_PREVIEW;
+    window.image.removePicture(previewPhoto);
+  };
+
   // Функция удаления элементов
   var deleteElements = function (collection) {
     for (var i = 0; i < collection.length; i++) {
@@ -171,6 +193,7 @@
     checkRoomsAndCapacityValidity: checkRoomsAndCapacityValidity,
     setOptionsForRooms: setOptionsForRooms,
     validateAdPrice: validateAdPrice,
-    deleteElements: deleteElements
+    deleteElements: deleteElements,
+    resetImages: resetImages
   };
 })();

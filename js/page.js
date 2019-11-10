@@ -154,6 +154,7 @@
     window.util.mainPin.style.top = window.form.mainPinCoordTop + 'px';
     window.util.mainPin.style.left = window.form.mainPinCoordLeft + 'px';
     window.map.closeAdPopup();
+    window.form.resetImages();
   };
 
   // Запускаем функции.
