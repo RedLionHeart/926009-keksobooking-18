@@ -94,6 +94,7 @@
   mapFilter.addEventListener('change', onHousingFilter);
 
   window.filters = {
+    mapFilter: mapFilter,
     filterPins: filterPins
   };
 })();

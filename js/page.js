@@ -155,6 +155,7 @@
     window.util.mainPin.style.left = window.form.mainPinCoordLeft + 'px';
     window.map.closeAdPopup();
     window.form.resetImages();
+    window.filters.mapFilter.reset();
   };
 
   // Запускаем функции.

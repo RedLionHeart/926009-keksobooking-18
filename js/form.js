@@ -16,6 +16,7 @@
     palace: 10000
   };
   var adForm = document.querySelector('.ad-form');
+  var buttonReset = adForm.querySelector('.ad-form__reset');
   var mainPinCoordLeft = parseFloat(window.util.mainPin.style.left);
   var mainPinCoordTop = parseFloat(window.util.mainPin.style.top);
   var mainPinWidth = window.util.mainPin.offsetWidth;
@@ -180,6 +181,15 @@
     window.backend.sendKeksobookingData(new FormData(adForm), successHandler, errorHandler);
     evt.preventDefault();
   });
+
+  // Событие срабатывающее на кнопку очистить
+  buttonReset.addEventListener('click', function () {
+    var mapPinsWithoutMainPin = window.util.pinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    adForm.reset();
+    deleteElements(mapPinsWithoutMainPin);
+    window.page.deactivatePage();
+  })
 
   window.form = {
     mainPinCoordTop: mainPinCoordTop,
