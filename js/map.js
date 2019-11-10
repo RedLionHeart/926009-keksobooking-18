@@ -35,7 +35,7 @@
   var loadPins = function () {
     window.backend.getKeksobookingData(function (data) {
       window.defaultData = data;
-      drawPins(window.filters.mainFilter());
+      drawPins(window.filters.filterPins());
     }, errorHandler);
   };
 
