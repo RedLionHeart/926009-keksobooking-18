@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
   var NUMBER_OF_OBJECTS = 5;
 
   var elementMap = document.querySelector('.map');
@@ -56,6 +57,7 @@
 
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
+    ENTER_KEYCODE: ENTER_KEYCODE,
     NUMBER_OF_OBJECTS: NUMBER_OF_OBJECTS,
     isActivePage: isActivePage,
     elementMap: elementMap,

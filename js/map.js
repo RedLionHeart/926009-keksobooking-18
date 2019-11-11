@@ -2,6 +2,8 @@
 
 (function () {
   var mainBlock = document.querySelector('main');
+  var featuresMap = window.util.mapFilters.querySelector('.map__features');
+  var featuresForm = document.querySelector('.features');
 
   // Создаем объявление в разметке.
   var createCard = function (dataCard) {
@@ -62,6 +64,25 @@
         return element.offer.title === currentData;
       })));
     }
+  });
+
+  // Обработчик нажатия на клавишу enter.
+  var onEnterKeyDownOnFeature = function (evt, featureList) {
+    if (evt.keyCode === window.util.ENTER_KEYCODE) {
+      evt.preventDefault();
+      var focusElement = featureList.querySelector(':focus');
+      focusElement.click();
+    }
+  };
+
+  // Событие фильтрации удобств при нажатии на enter.
+  featuresMap.addEventListener('keydown', function (evt) {
+    onEnterKeyDownOnFeature(evt, featuresMap);
+  });
+
+  // Событие добавления удобств в форму подачи объявления.
+  featuresForm.addEventListener('keydown', function (evt) {
+    onEnterKeyDownOnFeature(evt, featuresForm);
   });
 
   // Событие закрытия объявления по клику на крестик.
