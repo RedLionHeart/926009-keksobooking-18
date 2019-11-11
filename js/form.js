@@ -189,7 +189,7 @@
     adForm.reset();
     deleteElements(mapPinsWithoutMainPin);
     window.page.deactivatePage();
-  })
+  });
 
   window.form = {
     mainPinCoordTop: mainPinCoordTop,
