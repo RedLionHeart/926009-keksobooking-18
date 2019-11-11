@@ -22,6 +22,15 @@
     .querySelector('#card')
     .content.querySelector('.map__card');
 
+  // Проверка на пустоту приходящих данных.
+  var checkEmpty = function (dataAdItem, cardItem, render, dataCard) {
+    if (dataAdItem.length === 0) {
+      cardItem.style = 'display:none;';
+    } else {
+      render(dataCard, cardItem);
+    }
+  };
+
   // Создаем объявление на основе данных.
   var generateCardBlock = function (dataCard) {
     var cardTemplate = mapCardTemplate.cloneNode(true);
@@ -47,8 +56,8 @@
       window.util.uniteNumberWithWords(dataCard.offer.guests, TRANSCRIPT_GUESTS);
     cardTime.textContent = 'Заезд после ' + dataCard.offer.checkin + ', выезд до ' + dataCard.offer.checkout;
     cardDescription.textContent = dataCard.offer.description;
-    window.data.renderFeaturesInAd(dataCard, cardFeatures);
-    window.data.renderPhotosInAd(dataCard, cardPhotos);
+    checkEmpty(dataCard.offer.features, cardFeatures, window.data.renderFeaturesInAd, dataCard);
+    checkEmpty(dataCard.offer.photos, cardPhotos, window.data.renderPhotosInAd, dataCard);
     cardAvatar.src = dataCard.author.avatar;
     return cardTemplate;
   };
