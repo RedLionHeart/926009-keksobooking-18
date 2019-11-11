@@ -132,6 +132,14 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
+  // Событие активации страницы при нажатии на enter.
+  window.util.mainPin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.util.ENTER_KEYCODE) {
+      evt.preventDefault();
+      activatePage();
+    }
+  });
+
   // Функция активации страницы.
   var activatePage = function () {
     window.map.loadPins();
@@ -141,6 +149,10 @@
     enableFields(selectsOfMapFilters);
     setAdFormDisabled(window.util.isActivePage);
     window.form.addressInput.readOnly = true;
+    window.form.getValueOfAddressInputField(
+        window.util.mainPin.style.top,
+        window.util.mainPin.style.left
+    );
   };
 
   // Функция деактивации страницы
@@ -169,6 +181,7 @@
   })();
 
   window.page = {
+    activatePage: activatePage,
     deactivatePage: deactivatePage
   };
 })();
