@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var LOCATION_START_Y = 130;
+  var LOCATION_END_Y = 630;
+
   var fieldElements = window.form.adForm.querySelectorAll('fieldset');
   var selectsOfMapFilters = window.util.mapFilters.querySelectorAll('select');
   var startCoords = null;
@@ -68,8 +71,6 @@
       coordDirection = coordMin;
     } else if (coordDirection > coordMax) {
       coordDirection = coordMax;
-    } else {
-      coordDirection = coordDirection;
     }
     return coordDirection;
   };
@@ -86,11 +87,11 @@
 
     var coordTopY = window.util.mainPin.offsetTop - shift.y;
     var calculateCoordYMin =
-      window.data.LOCATION_START_Y -
+      LOCATION_START_Y -
       window.form.mainPinWidth -
       window.form.HEIGHT_OF_MAIN_PIN_POINT;
     var calculateCoordYMax =
-      window.data.LOCATION_END_Y -
+      LOCATION_END_Y -
       window.form.mainPinHeight -
       window.form.HEIGHT_OF_MAIN_PIN_POINT;
     var coordLeftX = window.util.mainPin.offsetLeft - shift.x;

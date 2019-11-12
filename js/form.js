@@ -3,13 +3,13 @@
 (function () {
   var DEFAULT_PREVIEW = 'img/muffin-grey.svg';
   var HEIGHT_OF_MAIN_PIN_POINT = 16;
-  var EXCEPTION_RATIO_ROOMS_AND_CAPACITY = {
+  var ExceptionRatioRoomsAndCapacity = {
     '1': ['3', '2', '0'],
     '2': ['3', '0'],
     '3': ['0'],
     '100': ['3', '2', '1']
   };
-  var MATCHING_TYPE_WITH_MIN_PRICE = {
+  var MatchingTypeWithMinPrice = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
@@ -72,7 +72,7 @@
     for (var i = 0; i < optionsCapacity.length; i++) {
       optionCapacityOption = optionsCapacity[i];
       optionCapacityValue = optionCapacityOption.value;
-      optionCapacityOption.disabled = EXCEPTION_RATIO_ROOMS_AND_CAPACITY[roomNumber].includes(optionCapacityValue);
+      optionCapacityOption.disabled = ExceptionRatioRoomsAndCapacity[roomNumber].includes(optionCapacityValue);
     }
   };
 
@@ -89,8 +89,8 @@
 
   // Соответствие типа жилья с ценой.
   var validateAdPrice = function () {
-    priceInputAd.min = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
-    priceInputAd.placeholder = MATCHING_TYPE_WITH_MIN_PRICE[typeInputAd.value];
+    priceInputAd.min = MatchingTypeWithMinPrice[typeInputAd.value];
+    priceInputAd.placeholder = MatchingTypeWithMinPrice[typeInputAd.value];
   };
 
   // Событие проверки соответствия типа жилья с ценой за ночь.
@@ -161,7 +161,7 @@
   };
 
   // Событие успешной отправки формы
-  var successHandler = function () {
+  var onSuccess = function () {
     var mapPinsWithoutMainPin = window.util.pinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     adForm.reset();
@@ -172,13 +172,13 @@
   };
 
   // Событие отправки формы с ошибками
-  var errorHandler = function () {
+  var onError = function () {
     generateMessage(window.util.errorTemplate, window.util.blockErrorMessage);
   };
 
   // Событие отправки данных на сервер
   adForm.addEventListener('submit', function (evt) {
-    window.backend.sendKeksobookingData(new FormData(adForm), successHandler, errorHandler);
+    window.backend.sendKeksobookingData(new FormData(adForm), onSuccess, onError);
     evt.preventDefault();
   });
 

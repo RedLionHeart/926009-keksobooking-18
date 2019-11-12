@@ -25,7 +25,7 @@
   };
 
   // Обработчик ошибочной загрузки.
-  var errorHandler = function (errorMessage) {
+  var onError = function (errorMessage) {
     window.util.blockErrorMessage.textContent = errorMessage;
     mainBlock.insertAdjacentElement('afterbegin', window.util.errorTemplate);
     window.util.buttonError.addEventListener('click', function () {
@@ -38,7 +38,7 @@
     window.backend.getKeksobookingData(function (data) {
       window.defaultData = data;
       drawPins(window.filters.filterPins());
-    }, errorHandler);
+    }, onError);
   };
 
   // Функция удаления объявления из разметки.
@@ -67,7 +67,7 @@
   });
 
   // Обработчик нажатия на клавишу enter.
-  var onEnterKeyDownOnFeature = function (evt, featureList) {
+  var onEnterKeyDownOnFeaturePress = function (evt, featureList) {
     if (evt.keyCode === window.util.ENTER_KEYCODE) {
       evt.preventDefault();
       var focusElement = featureList.querySelector(':focus');
@@ -77,12 +77,12 @@
 
   // Событие фильтрации удобств при нажатии на enter.
   featuresMap.addEventListener('keydown', function (evt) {
-    onEnterKeyDownOnFeature(evt, featuresMap);
+    onEnterKeyDownOnFeaturePress(evt, featuresMap);
   });
 
   // Событие добавления удобств в форму подачи объявления.
   featuresForm.addEventListener('keydown', function (evt) {
-    onEnterKeyDownOnFeature(evt, featuresForm);
+    onEnterKeyDownOnFeaturePress(evt, featuresForm);
   });
 
   // Событие закрытия объявления по клику на крестик.
