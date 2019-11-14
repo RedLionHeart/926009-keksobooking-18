@@ -28,7 +28,8 @@
   var onError = function (errorMessage) {
     window.util.blockErrorMessage.textContent = errorMessage;
     mainBlock.insertAdjacentElement('afterbegin', window.util.errorTemplate);
-    window.form.generateMessage(window.util.errorTemplate, window.util.blockErrorMessage);
+    window.form.generateMessage(window.util.errorTemplate, window.util.blockErrorMessage, true);
+    window.page.deactivatePage();
   };
 
   // Запускаем функцию загрузки пинов.

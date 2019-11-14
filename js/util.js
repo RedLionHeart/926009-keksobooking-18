@@ -44,15 +44,15 @@
     var tens = number % 100;
     var units = number % 10;
     if (tens > 10 && tens < 20) {
-      return schedule.other;
+      return schedule.OTHER;
     }
     if (units > 1 && units < 5) {
-      return schedule.few;
+      return schedule.FEW;
     }
     if (units === 1) {
-      return schedule.one;
+      return schedule.ONE;
     }
-    return schedule.other;
+    return schedule.OTHER;
   };
 
   window.util = {

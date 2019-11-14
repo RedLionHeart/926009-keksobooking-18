@@ -132,14 +132,22 @@
   };
 
   // Функция удаления соответствующего сообщения
-  var generateMessage = function (template, message) {
+  var generateMessage = function (template, message, isLoadError) {
+    // Функция срабатывающая при ошибке загрузки пинов, которая возвращает главный пин на место.
+    var returnMainPinInDefault = function () {
+      if (isLoadError) {
+        window.util.mainPin.style.top = window.form.mainPinCoordTop + 'px';
+        window.util.mainPin.style.left = window.form.mainPinCoordLeft + 'px';
+      }
+    };
 
     // Событие закрытия сообщения успешной отправки формы клавишей esc
     var onEscPress = function (evt) {
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
+      if (evt.keyCode === window.util.ESC_KEYCODE && window.map.mainBlock.contains(template)) {
         window.map.mainBlock.removeChild(template);
+        returnMainPinInDefault();
+        document.removeEventListener('keydown', onEscPress);
       }
-      document.removeEventListener('keydown', onEscPress);
     };
 
     // Событие закрытия сообщения успешной отправки формы путем клика вне области сообщения.
@@ -147,12 +155,17 @@
       if (evt.target !== message && window.map.mainBlock.contains(template)) {
         window.map.mainBlock.removeChild(template);
         document.removeEventListener('keydown', onEscPress);
+        returnMainPinInDefault();
       }
     };
 
     if (template.contains(window.util.buttonError)) {
       window.util.buttonError.addEventListener('click', function () {
-        window.map.mainBlock.removeChild(template);
+        if (window.map.mainBlock.contains(template)) {
+          window.map.mainBlock.removeChild(template);
+          returnMainPinInDefault();
+          document.removeEventListener('keydown', onEscPress);
+        }
       });
     }
 

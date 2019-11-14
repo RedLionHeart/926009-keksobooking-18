@@ -2,20 +2,20 @@
 
 (function () {
   var AccomodationType = {
-    flat: 'Квартира',
-    bungalo: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец'
+    FLAT: 'Квартира',
+    BUNGALO: 'Бунгало',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец'
   };
   var TranscriptRooms = {
-    one: ' комната для ',
-    few: ' комнаты для ',
-    other: ' комнат для '
+    ONE: ' комната для ',
+    FEW: ' комнаты для ',
+    OTHER: ' комнат для '
   };
   var TranscriptGuests = {
-    one: ' гостя',
-    few: ' гостей',
-    other: ' гостей'
+    ONE: ' гостя',
+    FEW: ' гостей',
+    OTHER: ' гостей'
   };
 
   var mapCardTemplate = document
@@ -77,7 +77,7 @@
     cardTitle.textContent = dataCard.offer.title;
     cardAddress.textContent = dataCard.offer.address;
     cardPrice.textContent = dataCard.offer.price + '₽/ночь';
-    cardType.textContent = AccomodationType[dataCard.offer.type];
+    cardType.textContent = AccomodationType[dataCard.offer.type.toUpperCase()];
     cardCapacity.textContent =
       dataCard.offer.rooms +
       window.util.uniteNumberWithWords(dataCard.offer.rooms, TranscriptRooms) +

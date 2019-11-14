@@ -46,7 +46,7 @@
   };
 
   // Обработчик активации страницы.
-  var onMainPinClickHandler = function () {
+  var onMainPinClick = function () {
     if (!isActivatePage()) {
       activatePage();
     }
@@ -127,7 +127,7 @@
   window.util.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     setStartCoords(evt.clientX, evt.clientY);
-    onMainPinClickHandler();
+    onMainPinClick();
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
@@ -173,14 +173,16 @@
   };
 
   // Запускаем функции.
-  (function () {
+  var initPage = function () {
     window.form.checkRoomsAndCapacityValidity();
     window.form.setOptionsForRooms();
     disableFields(fieldElements);
     disableFields(selectsOfMapFilters);
     window.form.getValueOfAddressInputField();
     window.form.validateAdPrice();
-  })();
+  };
+
+  initPage();
 
   window.page = {
     activatePage: activatePage,

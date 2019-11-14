@@ -1,19 +1,16 @@
 'use strict';
 
 (function () {
-  var API_PATHS = {
-    data: 'https://js.dump.academy/keksobooking/data',
-    post: 'https://js.dump.academy/keksobooking'
+  var ApiPaths = {
+    DATA: 'https://js.dump.academy/keksobooking/data',
+    POST: 'https://js.dump.academy/keksobooking'
   };
   var SUCCESS_STATUS = 200;
   var TIMEOUT = 10000;
 
-  // Функция получения данных с сервера.
-  var xhrGet = function (onLoad, onError, apiPath) {
+  var initXHR = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-
-    xhr.open('GET', apiPath);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_STATUS) {
@@ -31,32 +28,21 @@
 
     xhr.timeout = TIMEOUT;
 
-    xhr.send();
-  };
-
-  // Функция отправки данных на сервер.
-  var xhrPost = function (data, onLoad, onError, apiPath) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', function () {
-      if (xhr.status === SUCCESS_STATUS) {
-        onLoad(xhr.response);
-      } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-      }
-    });
-    xhr.open('POST', apiPath);
-    xhr.send(data);
+    return xhr;
   };
 
   // Получение списка объявлений
   var getKeksobookingData = function (onLoad, onError) {
-    xhrGet(onLoad, onError, API_PATHS.data);
+    var xhr = initXHR(onLoad, onError);
+    xhr.open('GET', ApiPaths.DATA);
+    xhr.send();
   };
 
   // Отправка формы объявления
   var sendKeksobookingData = function (data, onLoad, onError) {
-    xhrPost(data, onLoad, onError, API_PATHS.post);
+    var xhr = initXHR(onLoad, onError);
+    xhr.open('POST', ApiPaths.POST);
+    xhr.send(data);
   };
 
   window.backend = {

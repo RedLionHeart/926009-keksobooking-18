@@ -1,6 +1,14 @@
 'use strict';
 
 (function () {
+  var HOUSING_PRICE_MIDDLE = 'middle';
+  var HOUSING_PRICE_LOW = 'low';
+  var HOUSING_PRICE_HIGH = 'high';
+  var MIN_PRICE_HOUSING = 10000;
+  var MAX_PRICE_HOUSING = 50000;
+  var DEFAULT_VALUE_HOUSING = 'any';
+  var MAX_VALUE_OF_GUESTS = 2;
+
   var mapFilter = document.querySelector('.map__filters');
   var typeHousing = window.util.mapFilters.querySelector('#housing-type');
   var priceHousing = window.util.mapFilters.querySelector('#housing-price');
@@ -12,42 +20,40 @@
 
   // Проверка выбранного фильтра по типу жилья.
   var getTypeOfHouse = function (item) {
-    if (typeHousing.value === 'any') {
+    if (typeHousing.value === DEFAULT_VALUE_HOUSING) {
       return true;
-    } else {
-      return item.offer.type === typeHousing.value;
     }
+    return item.offer.type === typeHousing.value;
   };
+
   // Проверка выбранного фильтра по стоимости.
   var getHousingPrice = function (item) {
-    if (priceHousing.value === 'middle') {
-      return item.offer.price >= 10000 && item.offer.price <= 50000;
-    } else if (priceHousing.value === 'low') {
-      return item.offer.price < 10000;
-    } else if (priceHousing.value === 'high') {
-      return item.offer.price > 50000;
+    if (priceHousing.value === HOUSING_PRICE_MIDDLE) {
+      return item.offer.price >= MIN_PRICE_HOUSING && item.offer.price <= MAX_PRICE_HOUSING;
+    } else if (priceHousing.value === HOUSING_PRICE_LOW) {
+      return item.offer.price < MIN_PRICE_HOUSING;
+    } else if (priceHousing.value === HOUSING_PRICE_HIGH) {
+      return item.offer.price > MAX_PRICE_HOUSING;
     }
     return true;
   };
 
   // Проверка выбранного фильтра по количеству комнат.
   var getHousingRooms = function (item) {
-    if (roomsHousing.value === 'any') {
+    if (roomsHousing.value === DEFAULT_VALUE_HOUSING) {
       return true;
-    } else {
-      return item.offer.rooms === parseInt(roomsHousing.value, 10);
     }
+    return item.offer.rooms === parseInt(roomsHousing.value, 10);
   };
 
   // Проверка выбранного фильтра по количеству гостей.
   var getHousingGuests = function (item) {
-    if (guestsHousing.value === 'any') {
+    if (guestsHousing.value === DEFAULT_VALUE_HOUSING) {
       return true;
     } else if (parseInt(guestsHousing.value, 10) === 0) {
-      return item.offer.guests > 2;
-    } else {
-      return item.offer.guests === parseInt(guestsHousing.value, 10);
+      return item.offer.guests > MAX_VALUE_OF_GUESTS;
     }
+    return item.offer.guests === parseInt(guestsHousing.value, 10);
   };
 
   // Проверка выбранного фильтра по нажатию на кнопку удобства.

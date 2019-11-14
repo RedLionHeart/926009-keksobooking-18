@@ -2,6 +2,8 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var PREVIEW_IMAGE_BLOCK_WIDTH = 70;
+  var PREVIEW_IMAGE_BLOCK_HEIGHT = 70;
 
   // Функция добавления картинки в соответствующее поле.
   var addPicture = function (fileChooser, previewBlock, multipleImages) {
@@ -21,8 +23,8 @@
             var previewItem = document.createElement('img');
             previewItem.src = reader.result;
             previewItem.style = 'object-fit: cover; margin-bottom: 8px; margin-right: 10px;';
-            previewItem.width = 70;
-            previewItem.height = 70;
+            previewItem.width = PREVIEW_IMAGE_BLOCK_WIDTH;
+            previewItem.height = PREVIEW_IMAGE_BLOCK_HEIGHT;
             previewItem.alt = 'Фотография жилья';
             previewBlock.appendChild(previewItem);
           } else {
