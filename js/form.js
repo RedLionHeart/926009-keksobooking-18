@@ -144,7 +144,7 @@
 
     // Событие закрытия сообщения успешной отправки формы путем клика вне области сообщения.
     var onClickOverArea = function (evt) {
-      if (evt.target !== message) {
+      if (evt.target !== message && window.map.mainBlock.contains(template)) {
         window.map.mainBlock.removeChild(template);
         document.removeEventListener('keydown', onEscPress);
       }
@@ -172,7 +172,9 @@
   };
 
   // Событие отправки формы с ошибками
-  var onError = function () {
+  var onError = function (errorMessage) {
+    window.util.blockErrorMessage.textContent = errorMessage;
+    window.map.mainBlock.insertAdjacentElement('afterbegin', window.util.errorTemplate);
     generateMessage(window.util.errorTemplate, window.util.blockErrorMessage);
   };
 
@@ -204,6 +206,7 @@
     setOptionsForRooms: setOptionsForRooms,
     validateAdPrice: validateAdPrice,
     deleteElements: deleteElements,
-    resetImages: resetImages
+    resetImages: resetImages,
+    generateMessage: generateMessage
   };
 })();

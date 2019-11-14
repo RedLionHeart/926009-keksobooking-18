@@ -150,6 +150,7 @@
     enableFields(selectsOfMapFilters);
     setAdFormDisabled(window.util.isActivePage);
     window.form.addressInput.readOnly = true;
+    window.form.checkRoomsAndCapacityValidity();
     window.form.getValueOfAddressInputField(
         window.util.mainPin.style.top,
         window.util.mainPin.style.left

@@ -28,9 +28,7 @@
   var onError = function (errorMessage) {
     window.util.blockErrorMessage.textContent = errorMessage;
     mainBlock.insertAdjacentElement('afterbegin', window.util.errorTemplate);
-    window.util.buttonError.addEventListener('click', function () {
-      loadPins();
-    });
+    window.form.generateMessage(window.util.errorTemplate, window.util.blockErrorMessage);
   };
 
   // Запускаем функцию загрузки пинов.
