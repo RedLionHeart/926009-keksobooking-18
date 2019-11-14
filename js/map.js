@@ -91,7 +91,7 @@
     }
   });
 
-  // Событие закрытия объявления при нажатии на esc.
+  // Событие закрытия объявления при нажатии на esc
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.util.ESC_KEYCODE) {
       closeAdPopup();
